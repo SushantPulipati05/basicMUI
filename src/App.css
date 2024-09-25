@@ -1,0 +1,16 @@
+.styledDiv {
+  background-color: rgb(0, 105, 197);
+  color: white;
+  padding: 15px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.styledButton {
+  display: flex;                
+  justify-content: center;      
+  align-items: center;          
+  padding: 10px;
+}

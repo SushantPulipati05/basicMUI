@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react'
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -6,16 +6,32 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import Selector from './selector';
-import CustomizedSwitches from './switch';
+import Selector from './components/selector';
+import CustomizedSwitches from './components/switch';
 import { TablePagination } from '@mui/material';
 import './App.css'
-import BasicButtons from './button';
+import BasicButtons from './components/button';
+import DataDisplay from './components/dataDisplay';
+import axios from 'axios';
 
 
 export default function BasicTable() {
-  
-  
+    const [data, setData] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
+
+    useEffect(()=>{
+        axios.get("https://jsonplaceholder.typicode.com/users")
+        .then(response => {
+            setData(response.data);
+            setLoading(false);
+        })
+        .catch(error => {
+            setError(error.message);
+            setLoading(false);
+        })
+    },[]);
+
   return (
     <>
     <div className="styledDiv">Learning Material UI</div>
@@ -24,27 +40,31 @@ export default function BasicTable() {
       <Table aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell>Dessert (100g serving)</TableCell>
-            <TableCell align="right">Calories</TableCell>
-            <TableCell align="right">Fat&nbsp;(g)</TableCell>
-            <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-            <TableCell align="right">Protein&nbsp;(g)</TableCell>
-            <TableCell align="center">Selector</TableCell>
-            <TableCell align="center">Switch</TableCell>
+            <TableCell>Name</TableCell>
+            <TableCell >Email</TableCell>
+            <TableCell >Address</TableCell>
+            <TableCell >Phone No</TableCell>
+            <TableCell >Website</TableCell>
+            <TableCell >Company</TableCell>
+            <TableCell >Switch</TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>         
-            <TableRow>
-              <TableCell >Shawarma</TableCell>
-              <TableCell align="right">500</TableCell>
-              <TableCell align="right">low</TableCell>
-              <TableCell align="right">low</TableCell>
-              <TableCell align="right">lots</TableCell>
-              <TableCell align='center'><Selector /></TableCell>
-              <TableCell align='center'><CustomizedSwitches /></TableCell>
 
-            </TableRow>
+        <TableBody>            
+            {data.map((item) => (
+              <>
+              <TableRow>
+                <TableCell key={item.id}>{item.name}</TableCell>
+                <TableCell >{item.email}</TableCell>
+                <TableCell >{item.address.street} ,{item.address.city} ,{item.address.zipcode}</TableCell>
+                <TableCell >{item.phone}</TableCell>
+                <TableCell >{item.website}</TableCell>
+                <TableCell >{item.company.name}</TableCell>
+              </TableRow>
+              </>
+            ))}            
         </TableBody>
+        
       </Table>
     </TableContainer>
     <TablePagination
@@ -57,6 +77,9 @@ export default function BasicTable() {
     </Paper>
     <div className='styledButton'>
       <BasicButtons />
+    </div>
+    <div>
+      <DataDisplay /> 
     </div>
     </>
   );
